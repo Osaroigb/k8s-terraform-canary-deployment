@@ -23,6 +23,14 @@ jobs:
         sed -i "s|image: congtaojiang/whoami-nodejs-express.*|image: congtaojiang/whoami-nodejs-express:${{ env.WHOAMI_NODEJS_IMAGE_VERSION }}|" kubernetes/deployment.yaml
         sed -i "s|image: emilevauge/whoami.*|image: emilevauge/whoami:${{ env.WHOAMI_IMAGE_VERSION }}|" kubernetes/canary-deployment.yaml
 
+    - name: Configure Git Identity
+      env:
+        USER_EMAIL: ${{ secrets.USER_EMAIL }}
+        USER_NAME: ${{ secrets.USER_NAME }}
+      run: |
+        git config --global user.email "$USER_EMAIL"
+        git config --global user.name "$USER_NAME"
+
     - name: Check for Changes
       run: |
         git diff --exit-code kubernetes/deployment.yaml kubernetes/canary-deployment.yaml || git commit -am "Update deployment manifest with image versions"
