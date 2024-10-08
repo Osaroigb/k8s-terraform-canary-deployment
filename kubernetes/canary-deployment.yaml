@@ -16,10 +16,7 @@ spec:
       - name: whoami-canary
         image: emilevauge/whoami
         ports:
-        - containerPort: 80
-        command: ["/bin/sh", "-c"]
-        args:
-        - echo "The service is listening on port 80"; node index.js
+        - containerPort: 8080
         resources:
           requests:
             memory: "128Mi"
