@@ -17,6 +17,9 @@ spec:
         image: emilevauge/whoami
         ports:
         - containerPort: 80
+        command: ["/bin/sh", "-c"]
+        args:
+        - echo "The service is listening on port 80"; node index.js
         resources:
           requests:
             memory: "128Mi"

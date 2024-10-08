@@ -43,7 +43,7 @@ terraform destroy
    ```
 
 
-## Test Load Balancing
+## Test Load Balancing between the pods
 - Since Kubernetes LoadBalancer Service automatically exposes the service to an external IP, accessing the IP will demonstrate load balancing between the pods.
 
 - Use `curl` to access the load balancer IP multiple times and verify that responses are coming from different replicas.
