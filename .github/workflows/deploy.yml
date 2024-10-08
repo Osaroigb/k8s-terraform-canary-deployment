@@ -37,8 +37,8 @@ jobs:
 
     - name: Install AWS CLI and kubectl
       run: |
-        apt-get update
-        apt-get install -y awscli kubectl
+        sudo apt-get update
+        sudo apt-get install -y awscli kubectl
       continue-on-error: false
 
     - name: Configure AWS Credentials
@@ -81,13 +81,6 @@ jobs:
         kubectl get pods || { echo "Failed to get pod information"; exit 1; }
         echo "Verifying services..."
         kubectl get services || { echo "Failed to get services information"; exit 1; }
-
-    - name: Rollback on Failure
-      if: failure()
-      run: |
-        echo "Rolling back due to failure..."
-        kubectl rollout undo deployment/whoami-deployment
-        kubectl rollout undo deployment/whoami-canary
 
     - name: Notify on Success
       if: success()
