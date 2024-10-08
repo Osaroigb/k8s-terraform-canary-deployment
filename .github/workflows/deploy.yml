@@ -26,7 +26,6 @@ jobs:
     - name: Check for Changes
       run: |
         git diff --exit-code kubernetes/deployment.yaml kubernetes/canary-deployment.yaml || git commit -am "Update deployment manifest with image versions"
-        git diff --exit-code kubernetes/deployment.yaml kubernetes/canary-deployment.yaml || exit 0
 
     - name: Install AWS CLI and kubectl
       run: |
