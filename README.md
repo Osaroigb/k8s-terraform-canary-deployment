@@ -148,10 +148,13 @@ The workflow:
 3. Applies the Kubernetes manifests (both for the main service and the canary deployment).
 
 Ensure that the following secrets are configured in your GitHub repository:
+- `AWS_REGION`
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
-- `AWS_REGION`
 - `AWS_EKS_CLUSTER_NAME`
+- `USER_EMAIL` (your GitHub email)
+- `USER_NAME` (your GitHub username)
+
 
 ### Cleanup Step
 Once the deployments are complete and tested, you may want to clean up the cluster by removing all running pods, services, and deployments to avoid resource usage:
