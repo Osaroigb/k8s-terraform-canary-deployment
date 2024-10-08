@@ -81,6 +81,8 @@ jobs:
         kubectl get pods || { echo "Failed to get pod information"; exit 1; }
         echo "Verifying services..."
         kubectl get services || { echo "Failed to get services information"; exit 1; }
+        echo "Verifying deployments..."
+        kubectl get deployments || { echo "Failed to get deployments information"; exit 1; }
 
     - name: Notify on Success
       if: success()
