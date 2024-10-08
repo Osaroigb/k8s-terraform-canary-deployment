@@ -42,34 +42,39 @@ brew install kubectl
    aws configure
    ```
 
-2. **Initialize Terraform**: 
+2. **Set up S3 Bucket for Terraform State**: 
+   Create an S3 bucket to store the Terraform state file. This bucket ensures that the state is stored remotely and shared between team members, enabling collaboration.
+
+   Create an S3 bucket named `terraform-state-whoami` and create a `terraform` object within the bucket
+
+3. **Initialize Terraform**: 
    ```bash
    terraform init
    ```
 
-3. **Validate the Terraform configuration**: Ensure that your configuration files are syntactically valid.
+4. **Validate the Terraform configuration**: Ensure that your configuration files are syntactically valid.
 
    ```bash
    terraform validate
    ```
 
-4. **Format Terraform code**: Format the configuration to ensure consistent syntax and styling.
+5. **Format Terraform code**: Format the configuration to ensure consistent syntax and styling.
 
    ```bash
    terraform fmt
    ```
 
-5. **Plan the Infrastructure**: Review the resources that will be created.
+6. **Plan the Infrastructure**: Review the resources that will be created.
    ```bash
    terraform plan
    ```
 
-6. **Apply the Terraform Plan**: This command provisions the EKS cluster and associated resources.
+7. **Apply the Terraform Plan**: This command provisions the EKS cluster and associated resources.
    ```bash
    terraform apply
    ```
 
-7. **Destroy the Infrastructure**: To tear down the infrastructure.
+8. **Destroy the Infrastructure**: To tear down the infrastructure.
    ```bash
    terraform destroy
    ```
@@ -108,7 +113,6 @@ kubectl get services
 
 kubectl logs <pod_name>
 kubectl describe pod <pod_name>
-kubectl delete pod <pod_name>
 ```
 
 ## Testing Load Balancing

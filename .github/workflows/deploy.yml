@@ -3,7 +3,7 @@ name: Deploy to AWS EKS Cluster
 on:
   push:
     branches:
-    - main
+    - dev
 
 jobs:
   deploy:
