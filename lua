@@ -20,4 +20,8 @@ k8s-terraform-canary-deployment/
 │   ├── canary-deployment.yaml
 │   └── canary-service.yaml
 |
+├── .gitignore
+|
+├── lua
+|
 └── README.md
