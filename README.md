@@ -105,6 +105,10 @@ Ensure that the deployments and services are running as expected:
 kubectl get pods
 kubectl get nodes
 kubectl get services
+
+kubectl logs <pod_name>
+kubectl describe pod <pod_name>
+kubectl delete pod <pod_name>
 ```
 
 ## Testing Load Balancing

@@ -16,7 +16,7 @@ spec:
       - name: whoami-canary
         image: emilevauge/whoami
         ports:
-        - containerPort: 8080
+        - containerPort: 80
         resources:
           requests:
             memory: "128Mi"
