@@ -83,25 +83,21 @@ brew install kubectl
 
 ## Kubernetes Deployment
 
-### 1. Apply Main Service Deployment
-Once your EKS cluster is running, deploy the main service using the provided Kubernetes manifest files.
+### 1. Automated Main Service Deployment
+Once your EKS cluster is set up, the **GitHub Actions** workflow automates the deployment process. Upon every push to the `main` branch, the workflow will automatically:
 
-```bash
-kubectl apply -f kubernetes/deployment.yaml
-kubectl apply -f kubernetes/service.yaml
-```
+- Apply the main service deployment using the provided Kubernetes manifest files (`deployment.yaml` and `service.yaml`).
+- Create a Kubernetes deployment of 3 replicas, along with a LoadBalancer service that exposes the application to the internet.
 
-The `deployment.yaml` defines a Kubernetes Deployment of 3 replicas, and the `service.yaml` creates a LoadBalancer service that exposes your app to the internet.
+You do not need to manually run any commands, as the workflow handles the entire deployment process. 
 
-### 2. Apply Canary Deployment
-To test a canary release, apply the canary-specific deployment.
+### 2. Automated Canary Deployment
+Similarly, the canary-specific deployment is handled automatically by the **GitHub Actions** workflow:
 
-```bash
-kubectl apply -f kubernetes/canary-deployment.yaml
-kubectl apply -f kubernetes/canary-service.yaml
-```
+- The workflow applies the canary deployment manifest files (`canary-deployment.yaml` and `canary-service.yaml`).
+- This allows the new version of the application to be tested with a small portion of traffic.
 
-This canary deployment allows a new version of the application to be tested with a small portion of traffic.
+To monitor the progress or troubleshoot issues, you can view the GitHub Actions logs in the repository's "Actions" tab
 
 ### 3. Verify Running Services
 Ensure that the deployments and services are running as expected:
