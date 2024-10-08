@@ -3,12 +3,12 @@ resource "aws_eks_cluster" "eks_cluster" {
   role_arn = aws_iam_role.eks_role.arn
 
   vpc_config {
-    subnet_ids = module.vpc.private_subnets
-     security_group_ids = [aws_security_group.eks_cluster_sg.id]
+    subnet_ids         = module.vpc.private_subnets
+    security_group_ids = [aws_security_group.eks_cluster_sg.id]
   }
 
   enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
-  depends_on = [aws_iam_role_policy_attachment.eks_policy_attach]
+  depends_on                = [aws_iam_role_policy_attachment.eks_policy_attach]
 }
 
 resource "aws_iam_role" "eks_role" {
