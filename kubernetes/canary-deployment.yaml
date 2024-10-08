@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whoami-canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: whoami-canary
+  template:
+    metadata:
+      labels:
+        app: whoami-canary
+    spec:
+      containers:
+      - name: whoami-canary
+        image: emilevauge/whoami
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"

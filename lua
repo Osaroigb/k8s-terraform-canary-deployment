@@ -10,6 +10,8 @@ k8s-terraform-canary-deployment/
 │   ├── variables.tf
 │   ├── vpc.tf
 │   ├── secgrp.tf
+│   ├── backend-s3.tf
+│   ├── data.tf
 │   └── provider.tf
 |
 ├── kubernetes/

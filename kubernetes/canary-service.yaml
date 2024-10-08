@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: whoami-canary-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: whoami-canary
+  ports:
+  - port: 80
+    targetPort: 80
