@@ -2,6 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: whoami-deployment
+  labels:
+    app: whoami
+    environment: production
 spec:
   replicas: 3
   selector:
@@ -11,6 +14,7 @@ spec:
     metadata:
       labels:
         app: whoami
+        environment: production
     spec:
       containers:
       - name: whoami
