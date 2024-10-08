@@ -9,19 +9,22 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    env:
+      WHOAMI_IMAGE_VERSION: "v1.0.0"
+      WHOAMI_NODEJS_IMAGE_VERSION: "latest"
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_EKS_CLUSTER_NAME: ${{ secrets.AWS_EKS_CLUSTER_NAME }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set Image Versions
-      run: |
-        echo "WHOAMI_NODEJS_IMAGE_VERSION=latest" >> $GITHUB_ENV
-        echo "WHOAMI_IMAGE_VERSION=v1.0.0" >> $GITHUB_ENV
-
     - name: Update manifest file with image versions
       run: |
-        sed -i "s|image: congtaojiang/whoami-nodejs-express.*|image: congtaojiang/whoami-nodejs-express:${{ env.WHOAMI_NODEJS_IMAGE_VERSION }}|" kubernetes/deployment.yaml
-        sed -i "s|image: emilevauge/whoami.*|image: emilevauge/whoami:${{ env.WHOAMI_IMAGE_VERSION }}|" kubernetes/canary-deployment.yaml
+        sed -i "s|image: congtaojiang/whoami-nodejs-express.*|image: congtaojiang/whoami-nodejs-express:${WHOAMI_NODEJS_IMAGE_VERSION}|" kubernetes/deployment.yaml
+        sed -i "s|image: emilevauge/whoami.*|image: emilevauge/whoami:${WHOAMI_IMAGE_VERSION}|" kubernetes/canary-deployment.yaml
 
     - name: Configure Git Identity
       env:
@@ -42,10 +45,6 @@ jobs:
       continue-on-error: false
 
     - name: Configure AWS Credentials
-      env:
-        AWS_REGION: ${{ secrets.AWS_REGION }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
         if [ -z "$AWS_REGION" ] || [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
           echo "AWS credentials or region are not properly set"
@@ -56,9 +55,6 @@ jobs:
         aws configure set region $AWS_REGION
 
     - name: Update kubeconfig for EKS
-      env:
-        AWS_REGION: ${{ secrets.AWS_REGION }}
-        AWS_EKS_CLUSTER_NAME: ${{ secrets.AWS_EKS_CLUSTER_NAME }}
       run: |
         aws eks update-kubeconfig --region $AWS_REGION --name $AWS_EKS_CLUSTER_NAME || { echo 'Failed to update kubeconfig'; exit 1; }
 

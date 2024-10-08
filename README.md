@@ -153,6 +153,17 @@ Ensure that the following secrets are configured in your GitHub repository:
 - `AWS_REGION`
 - `AWS_EKS_CLUSTER_NAME`
 
+### Cleanup Step
+Once the deployments are complete and tested, you may want to clean up the cluster by removing all running pods, services, and deployments to avoid resource usage:
+
+```bash
+kubectl delete pods --all
+kubectl delete services --all
+kubectl delete deployments --all
+```
+
+This will ensure that no resources are left running, freeing up the environment.
+
 ## Conclusion
 
 This project demonstrates how to set up an EKS cluster using Terraform, deploy a service with Kubernetes, perform canary releases, and automate deployments using GitHub Actions. By leveraging these tools, you can easily manage, test, and scale your services in a cloud-native environment.
