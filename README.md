@@ -112,25 +112,32 @@ kubectl logs <pod_name>
 kubectl describe pod <pod_name>
 ```
 
-## Testing Load Balancing
+## Testing Your Setup
 
-Kubernetes automatically creates a LoadBalancer with an external IP address. You can test the load balancing feature by sending multiple requests to the service's external IP. Each response should indicate which replica handled the request, demonstrating load balancing.
-
-```bash
-curl http://<LoadBalancer-IP>
-```
-
-Run the command multiple times to see different instances handling the requests.
-
-## Canary Deployment
-
-To test the canary deployment, access the canary version of the application by querying the canary service’s LoadBalancer IP.
+To test your canary deployment setup, you can use the following command to ensure traffic is being routed correctly between the main and canary deployments.
 
 ```bash
-curl http://<Canary-LoadBalancer-IP>
+for i in $(seq 1 10); do curl -s --resolve canary.echo.pod.name.com:80:<Ingress-Controller-IP> canary.echo.pod.name.com; done
 ```
 
-This helps you test the new version of your app while still serving traffic to the stable version. Monitor both services and decide when to fully roll out the canary version.
+This command hits the hostname specified in both the base and canary Ingresses. Out of 10 requests, it will hit the base application 7 times and the canary application 3 times.
+
+Example output:
+
+```bash
+base-app-5dbddc57c5-n8l5q
+base-app-5dbddc57c5-n8l5q
+canary-app-ccb44d45c-qdpkz
+base-app-5dbddc57c5-n8l5q
+base-app-5dbddc57c5-n8l5q
+base-app-5dbddc57c5-n8l5q
+canary-app-ccb44d45c-qdpkz
+canary-app-ccb44d45c-qdpkz
+base-app-5dbddc57c5-n8l5q
+base-app-5dbddc57c5-n8l5q
+```
+
+This output shows that the curl command hits the older version (base application) 7 times and the newer version (canary application) 3 times.
 
 ## Automation using GitHub Actions
 

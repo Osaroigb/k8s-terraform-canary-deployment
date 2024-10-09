@@ -60,9 +60,7 @@ jobs:
     - name: Apply Kubernetes Configs
       run: |
         set -e
-        for file in kubernetes/deployment.yaml kubernetes/service.yaml kubernetes/canary-deployment.yaml kubernetes/canary-service.yaml; do
-          kubectl apply -f $file || { echo "Failed to apply $file"; exit 1; }
-        done
+        kubectl apply -f kubernetes/ || { echo "Failed to apply Kubernetes configs"; exit 1; }
       continue-on-error: false
 
     - name: Wait for Deployment to be Ready
