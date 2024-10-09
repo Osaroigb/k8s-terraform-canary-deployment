@@ -25,7 +25,7 @@ jobs:
 
     - name: Update manifest file with image versions
       run: |
-        sed -i "s|image: congtaojiang/whoami-nodejs-express.*|image: congtaojiang/whoami-nodejs-express:${WHOAMI_NODEJS_IMAGE_VERSION}|" kubernetes/deployment.yaml
+        sed -i "s|image: congtaojiang/whoami-nodejs-express.*|image: congtaojiang/whoami-nodejs-express:${WHOAMI_NODEJS_IMAGE_VERSION}|" kubernetes/base-deployment.yaml
         sed -i "s|image: emilevauge/whoami.*|image: emilevauge/whoami:${WHOAMI_IMAGE_VERSION}|" kubernetes/canary-deployment.yaml
 
     - name: Configure Git Identity
@@ -35,7 +35,7 @@ jobs:
 
     - name: Check for Changes
       run: |
-        git diff --exit-code kubernetes/deployment.yaml kubernetes/canary-deployment.yaml || git commit -am "Update deployment manifest with image versions"
+        git diff --exit-code kubernetes/base-deployment.yaml kubernetes/canary-deployment.yaml || git commit -am "Update deployment manifest with image versions"
 
     - name: Install AWS CLI and kubectl
       run: |
