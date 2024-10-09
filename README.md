@@ -86,25 +86,27 @@ brew install kubectl
 ### 1. Automated Main Service Deployment
 Once your EKS cluster is set up, the **GitHub Actions** workflow automates the deployment process. Upon every push to the `main` branch, the workflow will automatically:
 
-- Apply the main service deployment using the provided Kubernetes manifest files (`deployment.yaml` and `service.yaml`).
-- Create a Kubernetes deployment of 3 replicas, along with a LoadBalancer service that exposes the application to the internet.
+- Apply the main service deployment using the provided Kubernetes manifest files (`main-deployment.yaml` and `main-service.yaml`).
+- Install the **NGINX Ingress Controller**, which is responsible for routing external traffic to the Kubernetes services.
+- Create a Kubernetes deployment of 3 replicas, along with a LoadBalancer service that exposes the application through the ingress controller.
 
-You do not need to manually run any commands, as the workflow handles the entire deployment process. 
+You do not need to manually run any commands, as the workflow handles the entire deployment process, including setting up the ingress controller to ensure traffic is properly routed.
 
 ### 2. Automated Canary Deployment
 Similarly, the canary-specific deployment is handled automatically by the **GitHub Actions** workflow:
 
 - The workflow applies the canary deployment manifest files (`canary-deployment.yaml` and `canary-service.yaml`).
-- This allows the new version of the application to be tested with a small portion of traffic.
+- It also configures the **NGINX Ingress Controller** to handle canary traffic using the specified ingress rules (e.g., by splitting traffic between the main and canary services).
+- This allows the new version of the application to be tested with a small portion of traffic routed through the ingress.
 
-To monitor the progress or troubleshoot issues, you can view the GitHub Actions logs in the repository's "Actions" tab
 
 ### 3. Verify Running Services
-Ensure that the deployments and services are running as expected:
+Ensure that the ingress, deployments and services are running as expected:
 
 ```bash
 kubectl get pods
 kubectl get nodes
+kubectl get ingress
 kubectl get services
 kubectl get deployments
 
@@ -120,24 +122,24 @@ To test your canary deployment setup, you can use the following command to ensur
 for i in $(seq 1 10); do curl -s --resolve canary.echo.pod.name.com:80:<Ingress-Controller-IP> canary.echo.pod.name.com; done
 ```
 
-This command hits the hostname specified in both the base and canary Ingresses. Out of 10 requests, it will hit the base application 7 times and the canary application 3 times.
+This command hits the hostname specified in both the main and canary Ingresses. Out of 10 requests, it will hit the main application 7 times and the canary application 3 times.
 
 Example output:
 
 ```bash
-base-app-5dbddc57c5-n8l5q
-base-app-5dbddc57c5-n8l5q
+main-app-5dbddc57c5-n8l5q
+main-app-5dbddc57c5-n8l5q
 canary-app-ccb44d45c-qdpkz
-base-app-5dbddc57c5-n8l5q
-base-app-5dbddc57c5-n8l5q
-base-app-5dbddc57c5-n8l5q
+main-app-5dbddc57c5-n8l5q
+main-app-5dbddc57c5-n8l5q
+main-app-5dbddc57c5-n8l5q
 canary-app-ccb44d45c-qdpkz
 canary-app-ccb44d45c-qdpkz
-base-app-5dbddc57c5-n8l5q
-base-app-5dbddc57c5-n8l5q
+main-app-5dbddc57c5-n8l5q
+main-app-5dbddc57c5-n8l5q
 ```
 
-This output shows that the curl command hits the older version (base application) 7 times and the newer version (canary application) 3 times.
+This output shows that the curl command hits the older version (main application) 7 times and the newer version (canary application) 3 times.
 
 ## Automation using GitHub Actions
 
@@ -164,6 +166,7 @@ Once the deployments are complete and tested, you may want to clean up the clust
 
 ```bash
 kubectl delete pods --all
+kubectl delete ingress --all
 kubectl delete services --all
 kubectl delete deployments --all
 ```

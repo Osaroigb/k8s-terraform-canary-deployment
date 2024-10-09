@@ -25,7 +25,7 @@ jobs:
 
     - name: Update manifest file with image versions
       run: |
-        sed -i "s|image: congtaojiang/whoami-nodejs-express.*|image: congtaojiang/whoami-nodejs-express:${WHOAMI_NODEJS_IMAGE_VERSION}|" kubernetes/base-deployment.yaml
+        sed -i "s|image: congtaojiang/whoami-nodejs-express.*|image: congtaojiang/whoami-nodejs-express:${WHOAMI_NODEJS_IMAGE_VERSION}|" kubernetes/main-deployment.yaml
         sed -i "s|image: emilevauge/whoami.*|image: emilevauge/whoami:${WHOAMI_IMAGE_VERSION}|" kubernetes/canary-deployment.yaml
 
     - name: Configure Git Identity
@@ -35,7 +35,7 @@ jobs:
 
     - name: Check for Changes
       run: |
-        git diff --exit-code kubernetes/base-deployment.yaml kubernetes/canary-deployment.yaml || git commit -am "Update deployment manifest with image versions"
+        git diff --exit-code kubernetes/main-deployment.yaml kubernetes/canary-deployment.yaml || git commit -am "Update deployment manifest with image versions"
 
     - name: Install AWS CLI and kubectl
       run: |
@@ -57,6 +57,10 @@ jobs:
       run: |
         aws eks update-kubeconfig --region $AWS_REGION --name $AWS_EKS_CLUSTER_NAME || { echo 'Failed to update kubeconfig'; exit 1; }
 
+    - name: Install NGINX Ingress Controller
+      run: |
+        kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+
     - name: Apply Kubernetes Configs
       run: |
         set -e
@@ -65,7 +69,7 @@ jobs:
 
     - name: Wait for Deployment to be Ready
       run: |
-        kubectl rollout status deployment/base-app --timeout=60s || { echo "base-app rollout failed"; exit 1; }
+        kubectl rollout status deployment/main-app --timeout=60s || { echo "main-app rollout failed"; exit 1; }
         kubectl rollout status deployment/canary-app --timeout=60s || { echo "canary-app rollout failed"; exit 1; }
 
     - name: Verify Deployment Health
@@ -76,6 +80,8 @@ jobs:
         kubectl get services || { echo "Failed to get services information"; exit 1; }
         echo "Verifying deployments..."
         kubectl get deployments || { echo "Failed to get deployments information"; exit 1; }
+        echo "Verifying ingress..."
+        kubectl get ingress || { echo "Failed to get ingress information"; exit 1; }
 
     - name: Notify on Success
       if: success()
