@@ -61,6 +61,15 @@ jobs:
       run: |
         kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
 
+    - name: Wait for NGINX Ingress Controller to be Ready
+      run: |
+        kubectl wait --namespace ingress-nginx \
+          --for=condition=available deployment/ingress-nginx-controller \
+          --timeout=120s
+        kubectl wait --namespace ingress-nginx \
+          --for=condition=complete job/ingress-nginx-admission-patch \
+          --timeout=120s
+
     - name: Apply Kubernetes Configs
       run: |
         set -e

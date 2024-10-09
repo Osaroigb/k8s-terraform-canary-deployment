@@ -99,7 +99,6 @@ Similarly, the canary-specific deployment is handled automatically by the **GitH
 - It also configures the **NGINX Ingress Controller** to handle canary traffic using the specified ingress rules (e.g., by splitting traffic between the main and canary services).
 - This allows the new version of the application to be tested with a small portion of traffic routed through the ingress.
 
-
 ### 3. Verify Running Services
 Ensure that the ingress, deployments and services are running as expected:
 
