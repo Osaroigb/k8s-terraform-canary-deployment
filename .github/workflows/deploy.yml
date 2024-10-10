@@ -64,7 +64,7 @@ jobs:
     - name: Wait for NGINX Ingress Controller to be Ready
       run: |
         kubectl wait --namespace ingress-nginx \
-          --for=condition=complete deployment/ingress-nginx-controller \
+          --for=condition=available deployment/ingress-nginx-controller \
           --timeout=120s
         kubectl wait --namespace ingress-nginx \
           --for=condition=complete job/ingress-nginx-admission-patch \
