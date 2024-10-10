@@ -118,7 +118,7 @@ kubectl describe pod <pod_name>
 To test your canary deployment setup, you can use the following command to ensure traffic is being routed correctly between the main and canary deployments.
 
 ```bash
-for i in $(seq 1 10); do curl -s --resolve canary.echo.pod.name.com:80:<Ingress-Controller-IP> canary.echo.pod.name.com; done
+for i in $(seq 1 10); do curl https://canary-pod.osaro.online; done
 ```
 
 This command hits the hostname specified in both the main and canary Ingresses. Out of 10 requests, it will hit the main application 7 times and the canary application 3 times.
